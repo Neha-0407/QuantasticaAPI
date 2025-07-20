@@ -10,23 +10,72 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+
+function mapTxnArrayToObject(txnArr) {
+  // Map array to object using schema
+  return {
+    transactionAmount: txnArr[0],
+    transactionNarration: txnArr[1],
+    transactionDate: txnArr[2],
+    transactionType: txnArr[3],
+    transactionMode: txnArr[4],
+    currentBalance: txnArr[5]
+  };
+}
+
+function mapMfTxnArrayToObject(txnArr) {
+  return {
+    orderType: txnArr[0],
+    transactionDate: txnArr[1],
+    purchasePrice: txnArr[2],
+    purchaseUnits: txnArr[3],
+    transactionAmount: txnArr[4]
+  };
+}
+function mapStockTxnArrayToObject(txnArr) {
+  return {
+    transactionType: txnArr[0],
+    transactionDate: txnArr[1],
+    quantity: txnArr[2],
+    navValue: txnArr.length > 3 ? txnArr[3] : null
+  };
+}
+
 function sanitizeForFirestore(value) {
   if (value === null) return null;
 
   if (Array.isArray(value)) {
-    // Firestore disallows nested arrays, so filter out nested arrays recursively
-    return value
-      .map(sanitizeForFirestore)
-      .filter((v) => v !== undefined && !Array.isArray(v));
+    // Detect if this is a stock txn array (3 or 4 elements, first is number)
+    if (
+      (value.length === 3 || value.length === 4) &&
+      typeof value[0] === "number" &&
+      typeof value[1] === "string"
+    ) {
+      return mapStockTxnArrayToObject(value);
+    }
+    // Detect if this is a MF txn array (5 elements, first is number)
+    if (
+      value.length === 5 &&
+      typeof value[0] === "number" &&
+      typeof value[1] === "string"
+    ) {
+      return mapMfTxnArrayToObject(value);
+    }
+    // Detect if this is a bank txn array (6 elements, first is string)
+    if (
+      value.length === 6 &&
+      typeof value[0] === "string" &&
+      typeof value[3] === "number"
+    ) {
+      return mapTxnArrayToObject(value);
+    }
+    return value.map(sanitizeForFirestore).filter((v) => v !== undefined);
   }
 
   if (typeof value === "object") {
     const sanitized = {};
     for (const [key, val] of Object.entries(value)) {
-      const cleanVal = sanitizeForFirestore(val);
-      if (cleanVal !== undefined) {
-        sanitized[key] = cleanVal;
-      }
+      sanitized[key] = sanitizeForFirestore(val);
     }
     return sanitized;
   }

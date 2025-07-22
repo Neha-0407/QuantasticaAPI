@@ -5,8 +5,14 @@ app = Flask(__name__)
 CORS(app)
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({"message": "Welcome to the News Content Fetcher API! Use the /content endpoint to fetch articles."})
-
+    return jsonify({
+        "message": "Welcome to the News Content Fetcher API!",
+        "endpoints": {
+            "/getNews": "Fetch full news articles by topic (GET request with JSON body containing 'topic')",
+            "/getHeadlines": "Fetch news headlines by topic (GET request with JSON body containing 'topic')"
+        },
+        "status": "online"
+    })
 @app.route('/getNews', methods=['GET'])
 def content():
     req_data = request.get_json()

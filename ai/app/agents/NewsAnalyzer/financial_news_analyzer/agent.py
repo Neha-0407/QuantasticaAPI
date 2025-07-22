@@ -6,14 +6,6 @@ from .subagents.entity_linker_agent.agent import entity_linker_agent
 from .prompt import financial_news_analyzer_instruction
 from dotenv import load_dotenv
 
-# from google.adk.config import load_config
-
-
-# Load environment variables from .env file
-# Your .env file should contain:
-# GCP_PROJECT="your-gcp-project-id"
-# GCP_REGION="your-region"
-# GOOGLE_APPLICATION_CREDENTIALS="path/to/your/credentials.json"
 load_dotenv()
 
 root_agent = Agent(

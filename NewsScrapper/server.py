@@ -13,7 +13,7 @@ def home():
         },
         "status": "online"
     })
-@app.route('/getNews', methods=['GET'])
+@app.route('/getNews', methods=['POST'])
 def content():
     req_data = request.get_json()
     if not req_data or 'topic' not in req_data:
@@ -22,7 +22,7 @@ def content():
     data = getContent(topic)
     return jsonify(data)
 
-@app.route('/getHeadlines', methods=['GET'])
+@app.route('/getHeadlines', methods=['POST'])
 def headlines():
     req_data = request.get_json()
     if not req_data or 'topic' not in req_data:

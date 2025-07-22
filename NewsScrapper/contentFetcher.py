@@ -62,10 +62,32 @@ def getContent(topic):
     res = newsapi.get_everything(q=topic)
     output = []
     for article in res['articles'][:5]:
+        print(article)
         content = fetch_clean_content(article['url'])
         output.append({
             "title": article['title'],
             "url": article['url'],
             "content": content
+        })
+    return output
+
+def getHeadline(topic):
+    res = newsapi.get_everything(q=topic)
+    output = []
+    seen_urls = set()
+    for article in res['articles'][:20]:
+        if len(output) >= 5:
+            break
+        if article['url'] in seen_urls:
+            continue
+
+        seen_urls.add(article['url'])
+        output.append({
+            "url": article['url'],
+            "urlToImage": article['urlToImage'],
+            "publishedAt": article['publishedAt'],
+            "source": article['source']['name'],
+            "title": article['title'],
+            "description": article['description'],
         })
     return output

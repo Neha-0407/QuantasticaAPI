@@ -1,18 +1,27 @@
 from flask import Flask, request, jsonify
-from contentFetcher import getContent
+from contentFetcher import getContent,getHeadline
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "Welcome to the News Content Fetcher API! Use the /content endpoint to fetch articles."})
 
-@app.route('/getNews', methods=['POST'])
+@app.route('/getNews', methods=['GET'])
 def content():
     req_data = request.get_json()
     if not req_data or 'topic' not in req_data:
         return jsonify({"error": "Missing topic parameter"}), 400
     topic = req_data['topic']
     data = getContent(topic)
+    return jsonify(data)
+
+@app.route('/getHeadlines', methods=['GET'])
+def headlines():
+    req_data = request.get_json()
+    if not req_data or 'topic' not in req_data:
+        return jsonify({"error": "Missing topic parameter"}), 400
+    topic = req_data['topic']
+    data = getHeadline(topic)
     return jsonify(data)
 
 if __name__ == '__main__':

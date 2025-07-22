@@ -5,8 +5,7 @@ from .subagents.sentiment_analysis_agent.agent import sentiment_analysis_agent
 from .subagents.entity_linker_agent.agent import entity_linker_agent
 from .prompt import financial_news_analyzer_instruction
 from dotenv import load_dotenv
-import os
-import google.generativeai as genai
+
 # from google.adk.config import load_config
 
 
@@ -25,6 +24,6 @@ root_agent = Agent(
     tools=[
         AgentTool(agent=news_fetcher_agent),
         AgentTool(agent=sentiment_analysis_agent),
-        AgentTool(agent=entity_linker_agent),
+        AgentTool(agent=entity_linker_agent)
     ],
 )

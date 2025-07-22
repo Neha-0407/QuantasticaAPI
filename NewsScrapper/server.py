@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from contentFetcher import getContent,getHeadline
+from flask_cors import CORS
 app = Flask(__name__)
-
+CORS(app)
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "Welcome to the News Content Fetcher API! Use the /content endpoint to fetch articles."})

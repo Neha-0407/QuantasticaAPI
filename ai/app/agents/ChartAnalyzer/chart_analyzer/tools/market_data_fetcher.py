@@ -35,7 +35,7 @@ def fetch_stock_data(symbol: str, start_date: str, end_date: str) -> list:
             return []
 
         # Map and rename columns
-        df['Date'] = pd.to_datetime(df['CH_TIMESTAMP']).dt.strftime('%Y-%m-%d')
+        df['Date'] = pd.to_datetime(df['CH_TIMESTAMP']).dt.strftime('%m-%d-%Y')
         df = df.rename(columns={
             'CH_OPENING_PRICE': 'Open',
             'CH_TRADE_HIGH_PRICE': 'High',
@@ -74,7 +74,7 @@ def calculate_indicators_and_risk(stock_records: list) -> dict:
     print("Calculating technical indicators and risk parameters...")
     df = pd.DataFrame(stock_records)
     df['Date'] = pd.to_datetime(df['Date'])
-    df.set_index('Date', inplace=True)
+    df = df.sort_values('Date', ascending=True)
 
     # === Technical Indicators ===
     df['SMA_20'] = df['Close'].rolling(window=20).mean()
@@ -122,8 +122,9 @@ def calculate_indicators_and_risk(stock_records: list) -> dict:
 
     # Reset index to convert the 'Date' index back to a column
     df.reset_index(inplace=True)
+    last_month = datetime.now() - timedelta(days=30)
+    df = df[df['Date'] >= last_month]
     df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
-
     return {
         "indicators_df": df.to_dict(orient="records"),
         "risk_parameters": risk_params
@@ -133,35 +134,34 @@ def calculate_indicators_and_risk(stock_records: list) -> dict:
 # ==============================================================================
 # --- Example Usage ---
 # ==============================================================================
-# if __name__ == "__main__":
-#     SYMBOL = "INFY"
-#     # Set a fixed date range for consistent testing
-#     start_date_str = "15-07-2023"
-#     end_date_str = "15-07-2025"
-#
-#     # 1. Fetch the data by calling the first function
-#     stock_records = fetch_stock_data(SYMBOL, start_date_str, end_date_str)
-#
-#     # 2. Check if data fetching was successful before proceeding
-#     if stock_records:
-#         # 3. Perform analysis by passing the fetched data to the second function
-#         analysis_results = calculate_indicators_and_risk(stock_records)
-#
-#         # 4. Check if analysis was successful and print the results
-#         if analysis_results:
-#             print("\n=== Risk Parameters ===")
-#             for key, value in analysis_results['risk_parameters'].items():
-#                 print(f"{key}: {value}")
-#
-#             # Convert the list of dicts back to a DataFrame for easy viewing
-#             indicators_dataframe = pd.DataFrame(analysis_results['indicators_df'])
-#
-#             print("\n=== Sample Data with Indicators (last 5 days) ===")
-#             # Set the 'Date' column as the index for better readability
-#             if 'Date' in indicators_dataframe.columns:
-#                 indicators_dataframe['Date'] = pd.to_datetime(indicators_dataframe['Date'])
-#                 indicators_dataframe.set_index('Date', inplace=True)
-#
-#             print(indicators_dataframe.tail())
-#     else:
-#         print(f"Could not perform analysis because no data was fetched for {SYMBOL}.")
+if __name__ == "__main__":
+    SYMBOL = "INFY"
+    # Set a fixed date range for consistent testing
+    start_date_str = "15-07-2024"
+    end_date_str = "15-07-2025"
+
+    # 1. Fetch the data by calling the first function
+    stock_records = fetch_stock_data(SYMBOL, start_date_str, end_date_str)
+
+    # 2. Check if data fetching was successful before proceeding
+    if stock_records:
+        # 3. Perform analysis by passing the fetched data to the second function
+        analysis_results = calculate_indicators_and_risk(stock_records)
+        print(analysis_results)
+        if analysis_results:
+            print("\n=== Risk Parameters ===")
+            for key, value in analysis_results['risk_parameters'].items():
+                print(f"{key}: {value}")
+
+            # Convert the list of dicts back to a DataFrame for easy viewing
+            indicators_dataframe = pd.DataFrame(analysis_results['indicators_df'])
+
+            print("\n=== Sample Data with Indicators (last 5 days) ===")
+            # Set the 'Date' column as the index for better readability
+            if 'Date' in indicators_dataframe.columns:
+                indicators_dataframe['Date'] = pd.to_datetime(indicators_dataframe['Date'])
+                indicators_dataframe.set_index('Date', inplace=True)
+
+            print(indicators_dataframe.tail())
+    else:
+        print(f"Could not perform analysis because no data was fetched for {SYMBOL}.")

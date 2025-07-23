@@ -12,3 +12,9 @@ psutil==5.9.5
 litellm==1.66.3
 google-generativeai==0.8.5
 python-dotenv==1.1.0
+pandas
+pandas-ta
+nsepy
+matplotlib
+plotly
+kaleido

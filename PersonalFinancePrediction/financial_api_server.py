@@ -4,8 +4,9 @@ import numpy as np
 import joblib
 from datetime import datetime
 import traceback
-
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 class FinancialAPI:
     def __init__(self):

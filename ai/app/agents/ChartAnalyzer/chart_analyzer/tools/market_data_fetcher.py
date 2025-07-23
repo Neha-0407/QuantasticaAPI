@@ -148,6 +148,7 @@ if __name__ == "__main__":
         # 3. Perform analysis by passing the fetched data to the second function
         analysis_results = calculate_indicators_and_risk(stock_records)
         print(analysis_results)
+        # 4. Check if analysis was successful and print the results
         if analysis_results:
             print("\n=== Risk Parameters ===")
             for key, value in analysis_results['risk_parameters'].items():

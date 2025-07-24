@@ -7,7 +7,10 @@ import traceback
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 class FinancialAPI:
     def __init__(self):
         """Initialize the API with models and data"""

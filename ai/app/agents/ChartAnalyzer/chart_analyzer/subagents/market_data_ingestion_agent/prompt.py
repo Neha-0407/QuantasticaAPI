@@ -17,7 +17,7 @@ To fetch accurate historical market data and return it as a list of dictionaries
 3.  **Data Retrieval and Output:**
     * You MUST call the `fetch_stock_data` tool with the correct parameters.
     * Your final output MUST be the direct result from this tool, which is a list of dictionaries.
-    * This output will be automatically stored in the session `state` under the `output_key`: **`market_data`**.
+    * This output will be automatically stored in the sessions `state` under the `output_key`: **`market_data`**.
     * Do not add any conversational text or attempt to re-format the data.
 
 **Strict Output Schema (List of Dictionaries):**

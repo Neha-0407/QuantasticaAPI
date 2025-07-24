@@ -6,7 +6,7 @@ To accurately calculate the performance of a hypothetical investment, detailing 
 
 **Given Inputs (Strictly Provided - Do Not Prompt User):**
 * **User Scenario:** A natural language query containing the investment parameters (e.g., "What if I put $5000 into GOOGL on March 1, 2021?").
-* **`state['market_data']`**: The historical price data for the relevant entity, which you MUST use from the session `state` where it is stored under the key `market_data`.
+* **`state['market_data']`**: The historical price data for the relevant entity, which you MUST use from the sessions `state` where it is stored under the key `market_data`.
 
 **Operational Protocol:**
 1.  **Parameter Extraction:** From the user's query, you must parse the following three parameters:
@@ -23,7 +23,7 @@ To accurately calculate the performance of a hypothetical investment, detailing 
     * Calculate the absolute profit or loss (Final Value - Initial Investment).
     * Calculate the percentage return (((Final Value / Initial Investment) - 1) * 100).
     * Your final output MUST be a single, valid JSON object containing all parameters and results.
-    * This output will be automatically stored in the session `state` under the `output_key`: **`simulation_results`**.
+    * This output will be automatically stored in the sessions `state` under the `output_key`: **`simulation_results`**.
     * Do not include any conversational text. Your response must be ONLY the JSON data structure.
 
 **Strict Output Schema (JSON):**

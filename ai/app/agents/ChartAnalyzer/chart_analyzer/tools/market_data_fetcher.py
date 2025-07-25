@@ -105,8 +105,7 @@ def calculate_indicators_and_risk(stock_records: list) -> dict:
         cumulative_return = (df['Close'].iloc[-1] / df['Close'].iloc[0]) - 1
     else:
         cumulative_return = 0
-    sharpe_ratio = (df['daily_return'].mean() / df['daily_return'].std()) * np.sqrt(252) if df[
-                                                                                                'daily_return'].std() != 0 else 0
+    sharpe_ratio = (df['daily_return'].mean() / df['daily_return'].std()) * np.sqrt(252) if df['daily_return'].std() != 0 else 0
     cumulative = (1 + df['daily_return']).cumprod()
     rolling_max = cumulative.cummax()
     drawdown = (cumulative - rolling_max) / rolling_max

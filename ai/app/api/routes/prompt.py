@@ -29,6 +29,7 @@ def accept_prompt(req: PromptRequest):
     session_id = user_sessions.get(req.user_id)
     if not session_id:
         session_id = create_or_get_session(req.user_id)
+    session_id=str(session_id)
     payload = {
         "app_name": "financial_news_analyzer",
         "user_id": req.user_id,

@@ -17,7 +17,7 @@ from .prompt import FINANCIAL_DATA_FETCHER_PROMPT
 import json
 import os
 
-test_data_dir = os.path.join(os.path.dirname(__file__),'..','..','test_data_dir')
+test_data_dir = os.path.join(os.path.dirname(__file__),'..','..', 'test_data_dir')
 
 def load_json(file_path: str) -> dict:
     """Loads a JSON file from the specified path."""
@@ -27,31 +27,32 @@ def load_json(file_path: str) -> dict:
     except (FileNotFoundError, json.JSONDecodeError):
         return {"error": f"Could not load or parse {os.path.basename(file_path)}"}
 
-def fetch_user_financial_data(user_ph: str, requested_files: list) -> str:
+def fetch_user_financial_data(user_ph: str) -> str:
     """
-    [cite_start]Securely accesses and pre-processes user's provided financial data files. [cite: 208, 209]
+    Securely accesses user's credit report, prints the credit score, and returns the data.
 
     Args:
         user_ph: The user's identifier to locate their data directory.
-        requested_files: A list of filenames to fetch.
 
     Returns:
-        A JSON string containing the content of the requested files.
+        A JSON string containing the content of the user's credit report.
     """
-    user_data = {}
-    user_dir = os.path.join(test_data_dir, user_ph)
-    for filename in requested_files:
-        file_path = os.path.join(user_dir, filename)
-        user_data[filename] = load_json(file_path)
+    credit_report_path = os.path.join(test_data_dir, user_ph, 'fetch_credit_report.json')
+    user_credit_data = load_json(credit_report_path)
 
-    return json.dumps(user_data, indent=2)
+    # Extract and print the credit score
+    try:
+        credit_score = user_credit_data["creditReports"][0]["creditReportData"]["score"]["bureauScore"]
+        print(f"User's Credit Score: {credit_score}")
+    except (KeyError, IndexError, TypeError):
+        print("User's Credit Score: Not Found")
 
+    return json.dumps(user_credit_data, indent=2)
 
 financial_data_fetcher_agent = Agent(
     name="financial_data_fetcher",
     model="gemini-2.0-flash",
-    description="Securely accesses the user's provided financial data.",
+    description="Securely accesses the user's provided financial data and prints the credit score.",
     instruction=FINANCIAL_DATA_FETCHER_PROMPT,
-    tools=[fetch_user_financial_data],
-    output_key="user_financial_data"
+    tools=[fetch_user_financial_data]
 )

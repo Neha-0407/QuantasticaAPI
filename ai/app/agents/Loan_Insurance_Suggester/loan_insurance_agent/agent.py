@@ -14,9 +14,9 @@
 
 from google.adk.agents import Agent
 from .prompt import LOAN_INSURANCE_ORCHESTRATOR_PROMPT
-from .subagents.aggregator_agent.agent import aggregator_agent
+from .subagents.option_scrapper_aggregator_agent.agent import option_scraper_aggregator_agent
 from .subagents.financial_data_fetcher_agent.agent import financial_data_fetcher_agent
-from .subagents.eligibility_and_comparison_agent.agent import eligibility_and_comparison_agent
+from .subagents.eligibility_comparison_agent.agent import eligibility_comparison_agent
 from .subagents.recommendation_agent.agent import recommendation_agent
 
 # The root_agent for this team is the orchestrator.
@@ -26,9 +26,9 @@ root_agent = Agent(
     description="Analyzes loan and insurance options to suggest the best one as per a user's finances.",
     instruction=LOAN_INSURANCE_ORCHESTRATOR_PROMPT,
     sub_agents=[
-        aggregator_agent,
+        option_scraper_aggregator_agent,
         financial_data_fetcher_agent,
-        eligibility_and_comparison_agent,
+        eligibility_comparison_agent,
         recommendation_agent
     ],
     output_key="final_loan_insurance_advice"

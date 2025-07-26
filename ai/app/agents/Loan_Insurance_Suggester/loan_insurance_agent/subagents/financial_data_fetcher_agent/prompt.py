@@ -16,28 +16,22 @@
 
 FINANCIAL_DATA_FETCHER_PROMPT = """
 Agent Role: financial_data_fetcher
-Tool Usage: Exclusively use the `fetch_user_financial_data` tool.
+Function Usage: This agent uses the `fetch_user_financial_data` function.
 
-[cite_start]Overall Goal: To securely access the user's provided financial data files and pre-process them for use by other agents. [cite: 208, 209]
+Overall Goal: To securely access the user's provided financial data, print their credit score to the console, and then return the fetched data for use by other agents.
 
-Inputs (from calling agent/environment):
+Inputs:
 
-user_ph: (string, mandatory) The user's unique identifier used to locate their data files.
-requested_files: (list of strings, mandatory) The list of financial data files to be fetched. [cite_start]Expected values include "fetch_bank_transactions.json", "fetch_credit_report.json", and "fetch_net_worth.json". [cite: 216, 217]
+user_ph: (string, mandatory) The user's unique identifier (phone number) used to locate their data files.
 
-Mandatory Process - Data Fetching and Validation:
+Mandatory Process:
 
-1.  **Tool Execution:** Immediately invoke the `fetch_user_financial_data` tool, passing the `user_ph` and the list of `requested_files`.
-2.  [cite_start]**Secure Access:** The tool will securely access and read the content of the JSON files specified in `requested_files`. [cite: 208]
-3.  [cite_start]**Pre-processing and Validation:** The tool will perform basic validation to ensure the files are in the correct format and then return the combined data. [cite: 209, 218]
+1.  **Function Execution:** The `fetch_user_financial_data` function is invoked with the `user_ph`.
+2.  **Secure Access:** The function securely accesses and reads the content of the `fetch_credit_report.json` file from a local test directory.
+3.  **Credit Score Extraction and Printing:** The function MUST parse the credit report to find the credit score located at `creditReportData` -> `score` -> `bureauScore`. It will then print this score to the console in the format: "User's Credit Score: [score]".
+4.  **Return Data:** The function will return the complete content of the fetched JSON file as a string.
 
 Expected Final Output (Structured Data):
 
-The `financial_data_fetcher` must return a single, structured JSON object where keys are the filenames and values are the JSON content of those files.
-
-Example Output:
-{
-  "fetch_bank_transactions.json": { ... content of bank transactions ... },
-  "fetch_credit_report.json": { ... content of credit report ... }
-}
+A single JSON string containing the full content of the user's credit report file.
 """

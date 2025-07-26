@@ -16,54 +16,54 @@ from google.adk.agents import Agent
 from .prompt import RECOMMENDATION_PROMPT
 import json
 
-
-def generate_recommendations(comparison_results_json: str, user_preferences_json: str) -> str:
+def generate_recommendations(eligible_products_json: str) -> str:
     """
-    [cite_start]Generates personalized recommendations based on comparison results and user preferences. [cite: 237, 238]
+    Generates the top 3 recommendations from a list of eligible products.
 
     Args:
-        comparison_results_json: JSON string of comparison results.
-        user_preferences_json: JSON string of user preferences.
+        eligible_products_json: JSON string of eligible products.
 
     Returns:
-        A JSON string containing personalized recommendations.
+        A JSON string containing the top 3 personalized recommendations.
     """
-    comparison_results = json.loads(comparison_results_json)
-    user_preferences = json.loads(user_preferences_json)
+    try:
+        eligible_products = json.loads(eligible_products_json)
+    except json.JSONDecodeError:
+        return json.dumps({"error": "Invalid JSON data for eligible products."})
 
-    eligible_products = [p for p in comparison_results if p.get("eligibility_status") == "Eligible"]
-    preference = user_preferences.get("preference", "lowest interest")
+    if not eligible_products:
+        return json.dumps({"recommendations": [{"message": "No eligible products found based on your profile."}]})
 
-    # Simple sorting based on preference
-    if "lowest interest" in preference and eligible_products:
+    # Determine if products are loans or insurance to sort correctly
+    if "interest_rate" in eligible_products[0]:
+        # Sort by lowest interest rate for loans
         eligible_products.sort(key=lambda x: float(x.get("interest_rate", "99").strip('%')))
-    elif "flexible terms" in preference and eligible_products:
-        eligible_products.sort(key=lambda x: x.get("max_term_months", 0), reverse=True)
+        sort_key = "interest_rate"
+    elif "annual_premium" in eligible_products[0]:
+        # Sort by lowest premium for insurance
+        eligible_products.sort(key=lambda x: int(x.get("annual_premium", "999999").replace('₹', '').replace(',', '')))
+        sort_key = "annual_premium"
+    else:
+        sort_key = "N/A"
 
-    # Generate recommendations for the top 2 products
+
     recommendations = []
-    for i, product in enumerate(eligible_products[:2]):
-        reason = (f"This product is recommended as it aligns with your preference for '{preference}'. "
-                  f"It offers a competitive interest rate of {product.get('interest_rate', 'N/A')}.")
-
+    for i, product in enumerate(eligible_products[:3]): # Get top 3
+        reason = f"This product is a top recommendation based on its competitive {sort_key.replace('_', ' ')} of {product.get(sort_key, 'N/A')}."
         recommendations.append({
             "rank": i + 1,
             "provider": product.get("provider"),
-            "product_name": product.get("product_name"),
-            "interest_rate": product.get("interest_rate"),
+            "product_name": product.get("plan_name") or product.get("product_name"),
+            sort_key: product.get(sort_key),
             "recommendation_reason": reason
         })
 
     return json.dumps({"recommendations": recommendations}, indent=2)
-
-
-
 
 recommendation_agent = Agent(
     name="recommendation_agent",
     model="gemini-2.0-flash",
     description="Generates personalized recommendations for loans or insurance policies.",
     instruction=RECOMMENDATION_PROMPT,
-    tools=[generate_recommendations],
-    output_key="final_recommendations"
+    tools=[generate_recommendations]
 )

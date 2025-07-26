@@ -41,6 +41,12 @@ def accept_prompt(req: PromptRequest):
     endpoint = "run_sse" if req.streaming else "run"
     url = f"{BASE_URL}/{endpoint}"
     print(url)
-    resp = requests.post(url, json=payload)
+    try:
+        resp = requests.post(url, json=payload)
+        resp.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
+        return resp.json()
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return {"error": "Failed to process the request", "details": str(e)}
     print(resp)
-    return resp.json()
+

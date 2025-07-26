@@ -22,7 +22,7 @@ def create_or_get_session(app_name: str, user_id: str):
         url = f"{BASE_URL}/apps/{app_name}/users/{user_id}/sessions/{session_id}"
         response = requests.post(url)
         if response.status_code == 200:
-            print(response)
+            print(response.json())
         else:
             print("Error:", response.status_code, response.text)
     return {"session_id": session_id}

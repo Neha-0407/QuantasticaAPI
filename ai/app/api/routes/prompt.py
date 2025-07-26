@@ -27,7 +27,7 @@ class PromptRequest(BaseModel):
 @router.post("/ask")
 def accept_prompt(req: PromptRequest):
     # Get or create session_id
-    session_id = user_sessions.get(req.user_id)
+    session_id = user_sessions.get((req.app_name,req.user_id))
     if not session_id:
         session_id = create_or_get_session(req.app_name,req.user_id)
         session_id=str(session_id)

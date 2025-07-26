@@ -18,7 +18,7 @@ def create_or_get_session(app_name: str, user_id: str):
         PORT_NUMBER = 8002
     elif app_name == "wealth_manager_agent":
         PORT_NUMBER = 8003
-    elif app_name == "goal_tracker_agent":
+    elif app_name == "loan_insurance_agent":
         PORT_NUMBER = 8004
     elif app_name == "net_worth_tracker_agent":
         PORT_NUMBER = 8005

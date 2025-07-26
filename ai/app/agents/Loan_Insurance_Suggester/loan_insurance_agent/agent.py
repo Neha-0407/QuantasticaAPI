@@ -40,7 +40,7 @@ def get_eligible_options(user_ph: str, product_type: str) -> str:
                 "product_name": f"{random.choice(['Personal', 'Home', 'Car'])} Loan",
                 "interest_rate": f"{random.uniform(8.5, 18.0):.2f}%",
                 "max_term_months": random.choice([60, 84, 120, 240, 360]),
-                "min_eligibility_score": random.randint(680, 780)
+                "min_eligibility_score": random.randint(680, 780),
             })
     elif "insurance" in product_type.lower():
         providers = ["SecureLife Insurance", "General Health Co.", "SafeGuard Plus", "Family First Assurance"]
@@ -49,7 +49,8 @@ def get_eligible_options(user_ph: str, product_type: str) -> str:
                 "provider": f"{random.choice(providers)} #{i+1}",
                 "plan_name": f"{random.choice(['Gold', 'Silver', 'Bronze'])} Health Shield",
                 "sum_insured": f"{random.choice([5, 10, 15, 20, 50])} Lakhs",
-                "annual_premium": f"₹{random.randint(12000, 35000):,}"
+                "annual_premium": f"₹{random.randint(12000, 35000):,}",
+                "min_eligibility_score": random.randint(680, 780)
             })
 
     # --- 2. Fetch Credit Score ---
@@ -83,6 +84,28 @@ def get_eligible_options(user_ph: str, product_type: str) -> str:
 
     return json.dumps(eligible_products, indent=2)
 
+def get_credit_score(user_ph: str) -> str:
+    """
+    Fetches the user's credit score from a file and returns it.
+
+    Args:
+        user_ph: The user's identifier (phone number).
+
+    Returns:
+        A JSON string containing the user's credit score.
+    """
+    # Construct the path relative to the current agent.py file
+    current_dir = os.path.dirname(__file__)
+    test_data_dir = os.path.abspath(os.path.join(current_dir,'test_data_dir'))
+    credit_report_path = os.path.join(test_data_dir, user_ph, 'fetch_credit_report.json')
+
+    try:
+        with open(credit_report_path, 'r', encoding='utf-8') as f:
+            credit_data = json.load(f)
+        user_credit_score = int(credit_data["creditReports"][0]["creditReportData"]["score"]["bureauScore"])
+        return json.dumps({"credit_score": user_credit_score})
+    except (FileNotFoundError, json.JSONDecodeError, KeyError, IndexError, ValueError, TypeError) as e:
+        return json.dumps({"error": f"Failed to fetch credit score: {e}"})
 
 # The main agent for this simplified team
 root_agent = Agent(
@@ -90,6 +113,6 @@ root_agent = Agent(
     model="gemini-2.0-flash",
     description="Provides a list of eligible loan or insurance options based on a user's credit score.",
     instruction=LOAN_ADVISOR_PROMPT,
-    tools=[get_eligible_options],
+    tools=[get_eligible_options,get_credit_score],
     output_key="eligible_options"
 )

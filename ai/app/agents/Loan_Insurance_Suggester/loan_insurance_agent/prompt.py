@@ -38,4 +38,8 @@ Mandatory Process:
 Expected Final Output (Structured Data):
 
 A single JSON string containing a list of all the mock loan or insurance options for which the user meets the credit score requirement.
+
+Possible Outlier query:"What is my credit score?"
+
+action: ask the 
 """

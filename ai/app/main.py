@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 app = FastAPI()
 
-from api.routes import prompt, testdata
-from api.sessions import session
+from .api.routes import prompt, testdata
+from .api.sessions import session
 
 
 #app.include_router(voice.router, prefix="/voice")

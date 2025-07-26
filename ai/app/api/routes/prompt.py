@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 import requests
-from app.api.sessions.session import user_sessions,create_or_get_session
+from ..sessions.session import create_or_get_session, user_sessions
 from uuid import uuid4
 from dotenv import load_dotenv
 import os
@@ -29,7 +29,6 @@ def accept_prompt(req: PromptRequest):
     # Get or create session_id
     session_id = user_sessions.get(req.user_id)
     if not session_id:
-        session_id = create_or_get_session(req.user_id)
         session_id = create_or_get_session(req.app_name,req.user_id)
         session_id=str(session_id)
     payload = {
@@ -41,5 +40,7 @@ def accept_prompt(req: PromptRequest):
     }
     endpoint = "run_sse" if req.streaming else "run"
     url = f"{BASE_URL}/{endpoint}"
+    print(url)
     resp = requests.post(url, json=payload)
+    print(resp)
     return resp.json()

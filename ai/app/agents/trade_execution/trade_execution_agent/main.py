@@ -1,9 +1,9 @@
 import time
 from alpaca.trading.enums import OrderSide
-from cancel_order import cancel_last_order
-from place_order import place_order
-from update_order import update_order
-from get_all_orders import get_all_orders_for_symbol
+from ai.app.agents.trade_execution.trade_execution_agent.subagents.cancel_order_agent.cancel_order_tool import cancel_order_by_id
+from ai.app.agents.trade_execution.trade_execution_agent.subagents.place_order_agent.place_order_tool import place_order
+from ai.app.agents.trade_execution.trade_execution_agent.subagents.update_order_agent.update_order_tool import update_order
+from ai.app.agents.trade_execution.trade_execution_agent.subagents.get_all_orders_agent.get_all_orders_tool import get_all_orders_for_symbol
 
 def main():
     symbol = "GOOG"
@@ -34,7 +34,7 @@ def main():
     # Step 3: Cancel the last order
     print("Canceling the last order...")
     order_id="1a01049a-49c3-4b1f-8428-a327ccaffec2"
-    cancel_result = cancel_last_order(order_id)
+    cancel_result = cancel_order_by_id(order_id)
     print(cancel_result)
 
 

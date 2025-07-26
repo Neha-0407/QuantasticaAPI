@@ -1,8 +1,6 @@
 from alpaca.trading.client import TradingClient
-from alpaca.trading.enums import OrderSide, OrderType, TimeInForce
-from alpaca.trading.requests import GetOrdersRequest
-from get_all_orders import get_all_orders_for_symbol
-from config import API_KEY, SECRET_KEY
+
+from ..config import API_KEY, SECRET_KEY
 
 trade_api_url = None
 trade_api_wss = None
@@ -12,7 +10,7 @@ stream_data_wss = None
 client = TradingClient(api_key=API_KEY, secret_key=SECRET_KEY, paper=True, url_override=trade_api_url)
 
 
-def cancel_last_order(order_id: str = None):
+def cancel_order_by_id(order_id: str = ""):
     """
     Cancels the most recent open order.
 
@@ -23,4 +21,5 @@ def cancel_last_order(order_id: str = None):
     # if not orders:
     #     return "No open orders to cancel."
     # last_order = orders[0]
+    print(f"cancelling order: {order_id}")
     return client.cancel_order_by_id(order_id)

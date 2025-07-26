@@ -1,11 +1,8 @@
 from alpaca.trading.client import TradingClient
-from config import API_KEY, SECRET_KEY
-from place_order import place_order
-from get_all_orders import get_all_orders_for_symbol
 
-from config import API_KEY, SECRET_KEY
-from get_all_orders import get_all_orders_for_symbol
-from place_order import place_order
+from ..config import API_KEY, SECRET_KEY
+from ..get_all_orders_agent.get_all_orders_tool import get_all_orders_for_symbol
+from ..place_order_agent.place_order_tool import place_order
 
 trade_api_url = None
 trade_api_wss = None
@@ -15,7 +12,7 @@ stream_data_wss = None
 client = TradingClient(api_key=API_KEY, secret_key=SECRET_KEY, paper=True, url_override=trade_api_url)
 
 
-def update_order(symbol: str, new_qty: float, new_price: float = None, order_type="market"):
+def update_order(symbol: str, new_qty: float, new_price: float = 0.0, order_type:str="market"):
     """
     Updates an existing open order.
 
@@ -30,15 +27,21 @@ def update_order(symbol: str, new_qty: float, new_price: float = None, order_typ
     """
     orders = get_all_orders_for_symbol(symbol=symbol)
     #orders = client.get_orders(req)
+    updated = False
     for order in orders:
         if order.symbol == symbol:
+            updated = False
             client.cancel_order_by_id(order.id)
             place_order(
                 symbol=symbol,
                 qty=new_qty,
                 side=order.side.value,
                 order_type=order_type,
-                limit_price=new_price if order_type in ["limit", "stop_limit"] else None,
-                stop_price=new_price if order_type in ["stop", "stop_limit"] else None
+                limit_price=new_price if order_type in ["limit", "stop_limit"] else 0.0,
+                stop_price=new_price if order_type in ["stop", "stop_limit"] else 0.0
             )
-    return f"No open order found for {symbol} to update."
+            updated = True
+    if updated:
+        return f"✅ Order for {symbol.upper()} has been updated to quantity {new_qty} successfully."
+    else:
+        return f"⚠️ No open order found for {symbol.upper()} to update."

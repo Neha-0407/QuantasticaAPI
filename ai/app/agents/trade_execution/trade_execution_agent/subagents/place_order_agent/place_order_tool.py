@@ -1,11 +1,8 @@
-from alpaca.trading.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLimitOrderRequest
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import OrderSide, TimeInForce, OrderType
 from alpaca.trading.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLimitOrderRequest
-from config import API_KEY, SECRET_KEY
+from ..config import API_KEY, SECRET_KEY
 
-# API_KEY = "https://paper-api.alpaca.markets/v2"
-# SECRET_KEY = "PK29AGJ4WM3IW8LTDGDF"
 trade_api_url = None
 trade_api_wss = None
 data_api_url = None
@@ -14,7 +11,7 @@ stream_data_wss = None
 client = TradingClient(api_key=API_KEY, secret_key=SECRET_KEY, paper=True, url_override=trade_api_url)
 
 
-def place_order(symbol: str, qty: float, side: str, order_type: str, limit_price: float = None, stop_price: float = None):
+def place_order(symbol: str, qty: float, side: str, order_type: str, limit_price: float =0.0, stop_price: float = 0.0):
     """
     Places an order based on the specified parameters.
 

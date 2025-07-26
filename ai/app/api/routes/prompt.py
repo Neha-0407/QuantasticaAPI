@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import requests
 from ..sessions.session import create_or_get_session, user_sessions
-from uuid import uuid4
+from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
 import os
 
@@ -23,6 +23,18 @@ class PromptRequest(BaseModel):
     app_name: str
     new_message: NewMessage
     streaming: bool
+
+
+def stream_batches(url, payload):
+    try:
+        with requests.post(url, json=payload, stream=True) as response:
+            response.raise_for_status()
+            for chunk in response.iter_lines():
+                if chunk:  # Filter out keep-alive new lines
+                    yield chunk.decode('utf-8') + "\n"
+    except requests.exceptions.RequestException as e:
+        yield f"Error: {str(e)}\n"
+
 
 @router.post("/ask")
 def accept_prompt(req: PromptRequest):
@@ -52,6 +64,8 @@ def accept_prompt(req: PromptRequest):
     endpoint = "run_sse" if req.streaming else "run"
     url = f"{BASE_URL}:{PORT_NUMBER}/{endpoint}"
     print(url)
+    if req.streaming:
+        return StreamingResponse(stream_batches(url, payload), media_type="application/json")
     try:
         resp = requests.post(url, json=payload)
         resp.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)

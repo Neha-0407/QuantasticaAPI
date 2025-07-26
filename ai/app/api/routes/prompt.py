@@ -20,18 +20,20 @@ class NewMessage(BaseModel):
 
 class PromptRequest(BaseModel):
     user_id: str
+    app_name: str
     new_message: NewMessage
     streaming: bool
 
-@router.post("/financial_analyzer")
+@router.post("/ask")
 def accept_prompt(req: PromptRequest):
     # Get or create session_id
     session_id = user_sessions.get(req.user_id)
     if not session_id:
         session_id = create_or_get_session(req.user_id)
-    session_id=str(session_id)
+        session_id = create_or_get_session(req.app_name,req.user_id)
+        session_id=str(session_id)
     payload = {
-        "app_name": "financial_news_analyzer",
+        "app_name": req.app_name,
         "user_id": req.user_id,
         "session_id": session_id,
         "new_message": req.new_message.dict(),

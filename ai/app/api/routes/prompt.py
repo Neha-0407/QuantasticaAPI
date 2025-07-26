@@ -38,8 +38,19 @@ def accept_prompt(req: PromptRequest):
         "new_message": req.new_message.dict(),
         "streaming": req.streaming
     }
+    PORT_NUMBER = 8001
+    if req.app_name == "chart_analyzer_agent":
+        PORT_NUMBER = 8002
+    elif req.app_name == "wealth_manager_agent":
+        PORT_NUMBER = 8003
+    elif req.app_name == "goal_tracker_agent":
+        PORT_NUMBER = 8004
+    elif req.app_name == "net_worth_tracker_agent":
+        PORT_NUMBER = 8005
+    elif req.app_name == "affordability_analysis_agent":
+        PORT_NUMBER = 8006
     endpoint = "run_sse" if req.streaming else "run"
-    url = f"{BASE_URL}/{endpoint}"
+    url = f"{BASE_URL}:{PORT_NUMBER}/{endpoint}"
     print(url)
     try:
         resp = requests.post(url, json=payload)

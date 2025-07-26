@@ -1,25 +1,18 @@
 from google.adk.agents import Agent
-from .prompt import INVESTMENT_ORCHESTRATOR_PROMPT
-from .subagents.portfolio_analysis_agent.agent import portfolio_analysis_agent
-from .subagents.debt_optimization_agent.agent import debt_optimizer_agent
-from .subagents.long_term_goal_projection_agent.agent import goal_projection_agent
-from .subagents.anomaly_detection_agent.agent import anomaly_detector_agent
-
-# Import the new data fetching function
-from .data_fetcher import fetch_all_financial_data
+from .prompt import MASTER_ORCHESTRATOR_PROMPT
+# Import the two main agents
+from .subagents.personal_finance_agent.agent import personal_finance_agent
+from .subagents.market_analysis_agent.agent import market_analysis_agent
 
 root_agent = Agent(
-    name="investment_orchestrator",
+    name="master_orchestrator",
     model="gemini-2.0-flash",
-    description="Provides investment analysis, optimization, and financial forecasting.",
-    instruction=INVESTMENT_ORCHESTRATOR_PROMPT,
+    description="Coordinates a personal finance agent and a market analysis agent to create a holistic financial plan.",
+    instruction=MASTER_ORCHESTRATOR_PROMPT,
+    # This agent has no tools, only sub-agents
     sub_agents=[
-        portfolio_analysis_agent,
-        debt_optimizer_agent,
-        goal_projection_agent,
-        anomaly_detector_agent
+        personal_finance_agent,
+        market_analysis_agent
     ],
-    # Register the function as a tool for this agent
-    tools=[fetch_all_financial_data],
     output_key="final_investment_advice"
 )

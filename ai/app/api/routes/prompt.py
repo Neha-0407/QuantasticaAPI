@@ -43,7 +43,7 @@ def accept_prompt(req: PromptRequest):
         PORT_NUMBER = 8002
     elif req.app_name == "wealth_manager_agent":
         PORT_NUMBER = 8003
-    elif req.app_name == "goal_tracker_agent":
+    elif req.app_name == "loan_insurance_agent":
         PORT_NUMBER = 8004
     elif req.app_name == "net_worth_tracker_agent":
         PORT_NUMBER = 8005

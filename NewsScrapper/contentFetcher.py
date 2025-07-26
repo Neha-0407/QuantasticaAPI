@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from newspaper import Article
 from newsapi import NewsApiClient
 
-newsapi = NewsApiClient(api_key='415bd832778e41ddb492b9dfdbafb25b')
+newsapi = NewsApiClient(api_key='5a8e53cb70034f2795efb5317c39d42b')
 
 def fetch_clean_content(url):
     """Extract clean article content instead of raw HTML"""

@@ -24,9 +24,9 @@ def calculate_net_worth_from_files(user_ph: str) -> str:
     Returns:
         A JSON string summarizing the net worth analysis.
     """
-    net_worth_data = load_json(f'{user_ph}\\fetch_net_worth.json')
-    epf_data = load_json(f'{user_ph}\\fetch_epf_details.json')
-    credit_data = load_json(f'{user_ph}\\fetch_credit_report.json')
+    net_worth_data = load_json(f'{user_ph}/fetch_net_worth.json')
+    epf_data = load_json(f'{user_ph}/fetch_epf_details.json')
+    credit_data = load_json(f'{user_ph}/fetch_credit_report.json')
 
     # Primary data from fetch_net_worth.json
     net_worth_response = net_worth_data.get("netWorthResponse", {})

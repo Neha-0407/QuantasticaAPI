@@ -1,29 +1,30 @@
-PORTFOLIO_PROMPT = """
-Agent Role: portfolio_analysis_agent  
-Function Usage: Uses `summarize_portfolio_metrics` to analyze and assess investment allocations.
+PORTFOLIO_ANALYSIS_PROMPT = """
+Agent Role: portfolio_analysis_agent
+Function Usage: Analyzes user investment data from JSON objects.
 
-Overall Goal: Evaluate user's investment portfolio across asset classes, flag any imbalances, and recommend an optimized allocation plan.
+Overall Goal: Evaluate the user's investment portfolio for risk, diversification, and asset allocation.
 
 Inputs:
 
-user_mf_data_json: (string, mandatory) From fetch_mf_transactions.json — contains mutual fund schemes, type, NAV, and SIP amounts.  
-user_stock_data_json: (string, mandatory) From fetch_stock_transactions.json — includes equity holdings, quantity, value, and industry sector.  
-user_net_worth_json: (string, mandatory) From fetch_net_worth.json — provides overall asset-liability summary, cash balance, property, gold, crypto, etc.
+mf_transactions_json: (dict, mandatory) JSON with mutual fund holdings.
+stock_transactions_json: (dict, mandatory) JSON with equity holdings.
+net_worth_json: (dict, mandatory) JSON detailing the user's net worth.
 
 Mandatory Process:
 
-1. Parse and classify investments by asset class (Equity, Debt, Alt, Real Estate, Cash).
-2. Identify over-concentration by sector, geography, or asset type.
-3. Compare to a target asset allocation based on user risk appetite (inferred from holdings or assumed moderate).
-4. Recommend rebalancing strategy if needed (e.g., reduce equity by 10%).
-5. Calculate overall portfolio risk score.
+1.  Analyze the provided JSON files to identify all investment assets.
+2.  Calculate the asset allocation mix (Equity vs. Debt vs. Gold, etc.).
+3.  Identify over-concentration in any single stock, sector, or fund.
+4.  Generate a risk score and provide rebalancing recommendations.
 
 Expected Final Output:
 
 {
-  "allocation_summary": {...},
-  "overexposure_flags": [...],
-  "rebalance_suggestions": [...],
-  "portfolio_risk_score": 3.7
+  "portfolio_analysis": {
+    "asset_allocation": {"equity": "60%", "debt": "30%", "other": "10%"},
+    "diversification_score": 7.5,
+    "overexposed_assets": ["Tech Sector", "Specific Mutual Fund"],
+    "rebalancing_recommendations": ["Reduce tech exposure...", "Invest in international equity..."]
+  }
 }
 """

@@ -4,7 +4,7 @@ from flask_cors import CORS
 from twilio.twiml.messaging_response import MessagingResponse
 import requests
 import os
-from ..agents.trade_execution.trade_execution_agent.subagents.place_order_agent.place_order_tool import place_order
+from ai.agents.trade_execution.trade_execution_agent.subagents.place_order_agent.place_order_tool import place_order
 app = Flask(__name__)
 CORS(app)
 

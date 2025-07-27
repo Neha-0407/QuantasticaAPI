@@ -126,7 +126,7 @@ def receive_reply():
         #     "side": last_trade['order'],
         #     "order_type": "market",
         # )
-        place_order(symbol=last_trade['symbol'], qty=last_trade['quantity'], side=last_trade['order'], order_type='market')
+        place_order(symbol=last_trade['symbol'], qty=last_trade['quantity'], side=str(last_trade['order']), order_type="market")
     return {}, 200
 
 if __name__ == '__main__':

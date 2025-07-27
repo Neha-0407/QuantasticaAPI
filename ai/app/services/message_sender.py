@@ -1,10 +1,12 @@
 from flask import Flask, request
 from twilio.rest import Client
+from flask_cors import CORS
 from twilio.twiml.messaging_response import MessagingResponse
 import requests
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 # Use environment variables for security (recommended)
 TWILIO_ACCOUNT_SID = 'AC085fe07b1be21eb42fe86dd1b82d75b4'

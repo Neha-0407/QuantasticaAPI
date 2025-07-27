@@ -1,4 +1,4 @@
-# Vertex AI Financial Advisor Agent
+# Quantastica
 
 This project is a modular, multi-agent system designed to provide comprehensive financial advice. It is built using the *Google Agent Development Kit (ADK)* and leverages various *Google Cloud Platform (GCP)* services to create a scalable and intelligent financial advisory tool. The architecture is based on the "Vertex AI Agent Team Map for Financial Advisory" document.
 

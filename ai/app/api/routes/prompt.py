@@ -1,13 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
 import requests
 from ..sessions.session import create_or_get_session, user_sessions
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
-import os
+
 
 load_dotenv()
-BASE_URL = os.getenv("BASE_URL")
+BASE_URL = "http://localhost"
 
 router = APIRouter()
 
@@ -75,3 +75,27 @@ def accept_prompt(req: PromptRequest):
         return {"error": "Failed to process the request", "details": str(e)}
     print(resp)
 
+@router.post("/ask2")
+async def accept_prompt(request:Request):
+    req = await request.json()
+    PORT_NUMBER = 8001
+    if req.app_name == "chart_analyzer_agent":
+        PORT_NUMBER = 8002
+    elif req.app_name == "wealth_manager_agent":
+        PORT_NUMBER = 8003
+    elif req.app_name == "loan_insurance_agent":
+        PORT_NUMBER = 8004
+    elif req.app_name == "net_worth_tracker_agent":
+        PORT_NUMBER = 8005
+    elif req.app_name == "affordability_analysis_agent":
+        PORT_NUMBER = 8006
+    endpoint = "run_sse" if req.streaming else "run"
+    url = f"{BASE_URL}:{PORT_NUMBER}/{endpoint}"
+    print(url)
+    try:
+        resp = requests.post(url, json=req)
+        resp.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
+        return resp.json()
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return {"error": "Failed to process the request", "details": str(e)}

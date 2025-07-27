@@ -4,7 +4,7 @@ from flask_cors import CORS
 from twilio.twiml.messaging_response import MessagingResponse
 import requests
 import os
-
+from ..agents.trade_execution.trade_execution_agent.subagents.place_order_agent.place_order_tool import place_order
 app = Flask(__name__)
 CORS(app)
 
@@ -52,11 +52,14 @@ def receive_reply():
 
     if incoming_msg == 'yes':
         # Simulate API call or trade execution
-        trade_data = {
-            "symbol": "TSLA",
-            "price": 316.06,
-            "quantity": 10
-        }
+        # place_order(
+        #     "symbol": last_trade['symbol'],
+        #     "qty": last_trade['quantity'],
+        #     "side": last_trade['order'],
+        #     "order_type": "market",
+        # )
+        place_order(symbol=last_trade['symbol'], qty=last_trade['quantity'], side=last_trade['order'], order_type='market')
+    return {}, 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, debug=True)

@@ -15,7 +15,7 @@ data_api_url = None
 stream_data_wss = None
 API_KEY = "PKZOVU9ALX3TVHPNVTMM"
 SECRET_KEY = "0dCfYkvq4iuba3DUmeVian5bKLvZm13POrmslUYC"
-client = TradingClient(api_key=API_KEY, secret_key=SECRET_KEY, paper=True, url_override=trade_api_url)
+alpaca_client = TradingClient(api_key=API_KEY, secret_key=SECRET_KEY, paper=True, url_override=trade_api_url)
 
 
 def place_order(symbol: str, qty: float, side: str, order_type: str, limit_price: float =0.0, stop_price: float = 0.0):
@@ -70,7 +70,7 @@ def place_order(symbol: str, qty: float, side: str, order_type: str, limit_price
     else:
         raise ValueError("Invalid order type")
 
-    res = client.submit_order(req)
+    res = alpaca_client.submit_order(req)
     return f"Order placed: {res.id}"
 
 app = Flask(__name__)

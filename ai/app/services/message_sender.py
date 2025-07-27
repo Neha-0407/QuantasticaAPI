@@ -23,12 +23,12 @@ def send_trade_alert():
     last_trade['symbol'] = data['symbol']
     last_trade['price'] = data['price']
     last_trade['quantity'] = data['quantity']
-
+    last_trade['order'] = data['order']
     message = f"""
 📢 *Trade Alert: {data['symbol']}*
 Price: ${data['price']}
 Quantity: {data['quantity']} shares
-
+Action suggested: {data['order']}
 Reply *yes* to confirm execution.
 """
 

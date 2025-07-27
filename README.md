@@ -46,23 +46,7 @@ The system is designed with a modular, multi-agent architecture where a central 
 The project is organized into directories for each agent team. Inside each team's directory, there is an orchestrator agent (root_agent) and several sub-agents, each with its own prompt.py and agent.py.
 
 
-.
-├── team_3_loan_insurance_advisor
-│   ├── orchestrator_agent
-│   │   ├── prompt.py
-│   │   └── agent.py
-│   ├── financial_data_fetcher_agent
-│   │   ├── prompt.py
-│   │   └── agent.py
-│   └── ... (other sub-agents)
-├── team_6_wealth_management
-│   └── ...
-└── test_data_dir
-    └── 3333333333
-        ├── fetch_bank_transactions.json
-        ├── fetch_credit_report.json
-        └── ...
-
+<pre lang="markdown"> <code> ``` ├── team_3_loan_insurance_advisor │ ├── orchestrator_agent │ │ ├── prompt.py │ │ └── agent.py │ ├── financial_data_fetcher_agent │ │ ├── prompt.py │ │ └── agent.py │ └── ... (other sub-agents) ├── team_6_wealth_management │ └── ... (modules or agents for wealth management) └── test_data_dir └── 3333333333 ├── fetch_bank_transactions.json ├── fetch_credit_report.json └── ... (other test files) ``` </code> </pre>
 
 ## ⚙️ Usage
 

@@ -8,7 +8,7 @@ import os
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import OrderSide, TimeInForce, OrderType
 from alpaca.trading.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLimitOrderRequest
-
+from alpaca.trading.enums import OrderSide
 trade_api_url = None
 trade_api_wss = None
 data_api_url = None
@@ -126,7 +126,7 @@ def receive_reply():
         #     "side": last_trade['order'],
         #     "order_type": "market",
         # )
-        place_order(symbol=last_trade['symbol'], qty=last_trade['quantity'], side=str(last_trade['order']), order_type="market")
+        place_order(symbol=last_trade['symbol'], qty=last_trade['quantity'], side=OrderSide.BUY.value, order_type="market")
     return {}, 200
 
 if __name__ == '__main__':
